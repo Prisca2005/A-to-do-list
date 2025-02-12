@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="output.css">
 </head>
 <body>
-    
+    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 class="text-xl font-bold text-center mb-4">To-Do List</h2>
+            <div class="flex gap-2">
+                <input id="taskInput" type="text" placeholder="Enter a task" class="flex-1 p-2 border rounded-lg">
+                <button id="addTask" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Add</button>
+            </div>
+            <ul id="taskList" class="mt-4 space-y-2"></ul>
+            <p id="emptyMessage" class="text-gray-500 text-center mt-4 hidden">No tasks available</p>
+        </div> 
 </body>
 </html>
