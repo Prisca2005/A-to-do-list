@@ -1,21 +1,77 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>to-do list</title>
-    <link rel="stylesheet" href="output.css">
-</head>
-<body>
-    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 class="text-xl font-bold text-center mb-4">To-Do List</h2>
-            <div class="flex gap-2">
-                <input id="taskInput" type="text" placeholder="Enter a task" class="flex-1 p-2 border rounded-lg">
-                <button id="addTask" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Add</button>
-            </div>
-            <ul id="taskList" class="mt-4 space-y-2"></ul>
-            <p id="emptyMessage" class="text-gray-500 text-center mt-4 hidden">No tasks available</p>
-        </div> 
-</body>
+    <link href="output.css" rel="stylesheet">
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96 ">
+        <h2 class="text-xl font-bold text-center mb-4">To-Do List</h2>
+        <div class="flex gap-2">
+            <input id="taskInput" type="text" placeholder="Enter a task" class="flex-1 p-2 border rounded-lg">
+            <button id="addTask" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Add</button>
+        </div>
+        <ul id="taskList" class="mt-4 space-y-2"></ul>
+        <p id="emptyMessage" class="text-gray-500 text-center mt-4 hidden">No tasks available</p>
+    </div> 
+        <script>
+            const taskInput = document.getElementById ('taskInput');
+            const addTaskBtn = document.getElementById('addTask');
+            const taskList = document.getElementById('taskList');
+            const emptyMessage = document.getElementById('emptyMessage');
+    
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            
+            const renderTasks = () => {
+                taskList.innerHTML = tasks.length ? '' : emptyMessage.classList.remove('hidden');
+                tasks.forEach((task, index) => {
+                    const li = document.createElement('li');
+                    li.className = `flex justify-between items-center p-2 bg-gray-200 rounded-lg ${task.completed ? 'line-through text-gray-500' : ''}`;
+                    li.innerHTML = `
+                        <span>${task.text}</span>
+                        <div class="space-x-2">
+                            <button class="bg-green-500 text-white px-2 py-1 rounded-lg" onclick="toggleComplete(${index})">✔</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded-lg" onclick="editTask(${index})">✏</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded-lg" onclick="deleteTask(${index})">✖</button>
+                        </div>
+                    `;
+                    taskList.appendChild(li);
+                });
+                emptyMessage.classList.toggle('hidden', tasks.length > 0);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            };
+    
+            addTaskBtn.addEventListener('click', () => {
+                const text = taskInput.value.trim();
+                if (text) {
+                    tasks.push({ text, completed: false });
+                    taskInput.value = '';
+                    renderTasks();
+                }
+            });
+    
+            const toggleComplete = index => {
+                tasks[index].completed = !tasks[index].completed;
+                renderTasks();
+            };
+    
+            const deleteTask = index => {
+                tasks = tasks.filter((_, i) => i !== index);
+                renderTasks();
+            };
+    
+            const editTask = index => {
+                const newText = prompt('Edit task:', tasks[index].text);
+                if (newText) {
+                    tasks[index].text = newText;
+                    renderTasks();
+                }
+            };
+    
+            renderTasks();
+        </script>
+    </body>
 </html>
